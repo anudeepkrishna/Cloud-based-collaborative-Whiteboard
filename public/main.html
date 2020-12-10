@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>White Board</title>
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A Collabrative White board">
+		  <style type="text/css">
+      #container { position: relative; }
+      #container{
+        width: 1000px;
+        height: 500px;
+        background-color: rgb(253, 245, 245);
+        border-radius: 4px;
+      }
+      body{
+        background: #5accbb !important;
+      }
+      #imageView { border: 0.8px solid rgb(36, 34, 34); }
+      #imageTemp { position: absolute; top: 1px; left: 1px; }
+      canvas {
+        border-radius: 5px;
+        cursor: url(../img/mypen.png), crosshair;
+    }
+    #text_tool {
+    position: absolute;
+    border: 1px dashed black;
+    outline: 0;
+    z-index:1000 !important;
+    white-space: nowrap;
+    display: none;
+}
+.container-fluid .btn.btn-sm{
+    background: rgb(17, 56, 116);
+    box-shadow: 0 3px 0 0 rgba(14, 9, 9, 0.5);
+    color: rgb(235, 223, 223);
+    outline: none;
+    cursor: pointer;
+    text-shadow: 0 0.8px rgb(16, 27, 44);
+    display: inline-block;
+    font-size: 15px;
+    border: none;
+    border-radius: 4.5px;
+    padding: 4px 16px;
+    margin-right: 4px;
+}
+button {
+  font-size: 2.1em; 
+  padding: 1.1px;
+  text-align: center;
+}
+.isDisabled > a {
+  color: currentColor;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
+}
+#users {
+   text-align: center;
+   height: 220px;
+   overflow-y: scroll;
+   line-height:1;
+}
+#chatting {
+   text-align: left;
+   height: 220px;
+   line-height:1;
+}
+#users > button {
+  width: 100%;
+} 
+.container .btn.btn-sm:active{
+   background: rgb(15, 47, 94); 
+}
+label{
+    color: rgb(233, 223, 223);
+}
+    </style>
+    <!-- Bootstrap -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    
+	</head>
+    
+	<body style="margin-top:30px; margin-left: 30px;">
+	<div class="container-fluid">
+    <div class="alert alert-info" style="padding: 8px !important; margin-bottom: 5px; width:77%">
+      <strong id="desc"></strong>
+    </div>
+    <div>
+      <div id="Tools" style="display: inline-block;vertical-align: top;">
+        <p>
+        <button class="btn btn-success btn-sm" value="pencil" id="pencil_button">PEN</button>
+        <button  class="btn btn-success btn-sm" value="rect" id="rect_button">Rect</button>
+        <button  class="btn btn-success btn-sm" value="circle" id="circle_button">CIRCLE</button>
+        <button  class="btn btn-success btn-sm" value="ellipse" id="ellipse_button">ELLIPSE</button>
+        <button  class="btn btn-success btn-sm" value="line" id="line_button">LINE</button>
+        <button  class="btn btn-success btn-sm" value="text" id="text_button">TEXT</button>
+        <button  class="btn btn-success btn-sm" id="clear-all">Clear</button>
+        <label for="colour" style="position:absolute;">Colour </label>
+        <input id="colour_picker"  value="#000000" style="width:75px;" class="jscolor {width:240, height:145, position:'right',
+    borderColor:'#FFF', insetColor:'#FFF', backgroundColor:'#666'}">
+
+        <span class="form-group" style="width: 85px;display: inline-block;">
+          <label for="line-Width">Thickness: </label>
+          <select class="form-control" id="line_Width">
+            <option>2</option>
+            <option>4</option>
+            <option>6</option>
+            <option>8</option>
+            <option>10</option>
+            <option>12</option>
+            <option>14</option>
+          </select>
+        </span>
+         <span class="form-group" style="width: 120px;display: inline-block;">
+          <label for="draw-text-fontfamily">Font: </label>
+          <select class="form-control" id="draw-text-fontfamily">
+            <option value="Courier New">Courier New</option>
+            <option value="serif">serif</option>
+            
+            <option value="Arial">Arial</option>
+            <option value="Verdana" selected>Verdana</option>
+            <option value="sans-serif">sans-serif</option>
+          </select>
+        </span>
+        <span class="form-group" style="width: 90px;display: none;">
+          <label for="draw-text-fontsize">Font Size: </label>
+          <select class="form-control" id="draw-text-fontsize">
+            <option value="8">8 Px</option>
+            <option value="10">10 Px</option>
+            <option value="12">12 Px</option>
+            <option value="14">14 Px</option>
+            <option value="16">16 Px</option>
+            <option value="18">18 Px</option>
+            <option value="20">20 Px</option>
+            <option value="22">22 Px</option>
+            <option value="24" selected>24 Px</option>
+            <option value="26">26 Px</option>
+            <option value="28">28 Px</option>
+            <option value="36">36 Px</option>
+            <option value="42">42 Px</option>
+          </select>
+        </span>
+        <button type="button" class="btn btn-warning btn-sm" id="save-all">Save</button>
+        <button type="button" class="btn btn-warning btn-sm" id="save-none" style="display: none;">Unsave</button>
+        </p>
+       
+        
+        <div id="container" style="display: inline-block;vertical-align: top;">
+          <canvas id="imageView" width="1000" height="500">
+           
+          </canvas>
+        </div>
+      </div>
+        <div style="display: inline-block; width: 280px;vertical-align: middle;">
+          <span style="width: 280px; text-align: center; display: inline-block; font-size: 3em; color: mediumblue; text-decoration: underline;">Users List</span>
+          <div id='users' className = "list-group" style="border:1px solid blue;">
+          
+        </div>
+        <span style="width: 280px; text-align: center; display: inline-block; font-size: 3em; color: mediumblue; text-decoration: underline;">Chatting Box</span>
+          <div id='chatting' className = "list-group" style="border:1px solid blue; vertical-align: bottom;">
+            <div id="msg_content" style="height: 190px; overflow-y: scroll;"></div>
+
+            <input id="msg" type="text" placeholder="Messages" value="" style="width: 236px;height: 25px; "><button id="msg_send" style="height: 25px; width: 40px;">Send</button>
+        </div>
+          
+      </div>
+
+    </div>
+    
+<!-- Script files -->
+        <script src='js/jquery.min.js'></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="js/jscolor.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+		    <script src="js/canvas.js"></script> 
+		<!-- <script src="canvas-backup-latest-v1.js"></script> -->
+         
+     <script type="text/javascript">
+      $(document).ready(function(){
+        var socket = io();
+          var board_url = window.location.href;
+          $('.linkToBoard').attr("href",board_url);
+          console.log(localStorage.getItem('user'));
+          $("#msg_send" ).click(function() {
+            var msg = $("#msg").val();
+            if (msg){
+            var user = localStorage.getItem('user');
+            var data = "-" + user + " : " + msg; 
+            socket.emit("CHAT", data);
+            var msg = $("#msg").val("");}
+          });
+
+      });
+    </script>
+    <script type="text/javascript" >
+    document.getElementById('clear-all').disabled=true;
+    document.getElementById('save-all').style.display="none";
+    var username = localStorage.getItem("user");
+    var socket = io();
+      function vote(user){
+        var voted= user.getAttribute("id");
+        var joinedUser='';
+        //vote to elect a leader in this whiteboard
+         if(localStorage.getItem('voted')==undefined && localStorage.getItem('leader')==undefined){
+          var voted= user.getAttribute("id");
+         // localStorage.setItem('voted',voted)
+          var elems = document.getElementsByClassName("btn_user");
+          for(var i = 0; i < elems.length; i++) {
+              elems[i].disabled = true;
+          }
+         alert(`Good. You voted ${voted} as your leader`)
+         desc = `Good. You voted ${voted} as your leader`;
+          console.log("desc_change",desc);
+          document.getElementById('desc').innerHTML=desc;
+          var data = {username,voted};
+         socket.emit("VOTE", data);
+        } else  {
+            joinedUser=voted;
+            socket.emit("JOINED", joinedUser);
+            alert(`Good. You voted ${voted} as  joinedUser`)
+        } 
+       
+      }
+    </script>
+
+	</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "whiteboard",
+  "version": "1.0.0",
+  "description": "A collaborative whiteboard",
+  "main": "index.js",
+  "keywords": [
+    "socket.io",
+    "whiteboard",
+    "collaborative",
+    "express.js"
+  ],
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "4.9.x",
+    "socket.io": "latest"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": ""
+}
